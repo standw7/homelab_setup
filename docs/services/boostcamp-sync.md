@@ -26,7 +26,7 @@ Syncs Boostcamp (iOS) lifting workouts to Strava. Works via an iOS Shortcut that
    ```bash
    curl -X POST http://boostcamp-sync.homelab/api/sync \
      -H "Content-Type: application/json" \
-     -H "X-API-Key: YOUR_API_KEY" \
+     -H "X-API-Key: <your-api-key-here>" \
      -d '{"duration": 3600, "calories": 450, "start_date": "2026-01-01T08:30:00-07:00"}'
    ```
 5. Set up the iOS Shortcut on your iPhone (see below)
