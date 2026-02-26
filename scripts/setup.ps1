@@ -72,7 +72,7 @@ if (-not (Test-Path $EnvFile)) {
 function Read-EnvFile {
     $envVars = @{}
     Get-Content $EnvFile | ForEach-Object {
-        if ($_ -match "^\s*([^#][^=]+)=(.*)$") {
+        if ($_ -match '^\s*([^#][^=]+)=(.*)$') {
             $envVars[$Matches[1].Trim()] = $Matches[2].Trim()
         }
     }
@@ -83,8 +83,8 @@ function Read-EnvFile {
 function Set-EnvVar {
     param([string]$Key, [string]$Value)
     $content = Get-Content $EnvFile -Raw
-    if ($content -match "(?m)^${Key}=") {
-        $content = $content -replace "(?m)^${Key}=.*", "${Key}=${Value}"
+    if ($content -match ('(?m)^' + $Key + '=')) {
+        $content = $content -replace ('(?m)^' + $Key + '=.*'), ($Key + '=' + $Value)
     } else {
         $content += "`n${Key}=${Value}"
     }
@@ -96,7 +96,7 @@ function Prompt-EnvVar {
     param([string]$Key, [string]$Description)
     $envVars = Read-EnvFile
     if ($envVars[$Key]) {
-        Write-Host "  $Key is already set (keeping existing value)"
+        Write-Host "  $Key is already set - keeping existing value"
         return
     }
     Write-Host ""
@@ -112,7 +112,7 @@ function Generate-Secret {
     param([string]$Key)
     $envVars = Read-EnvFile
     if ($envVars[$Key]) {
-        Write-Host "  $Key is already set (keeping existing value)"
+        Write-Host "  $Key is already set - keeping existing value"
         return
     }
     $rng = [System.Security.Cryptography.RNGCryptoServiceProvider]::new()
@@ -144,12 +144,12 @@ Write-Host "============================================"
 Write-Host "  Configure Environment Variables"
 Write-Host "============================================"
 Write-Host ""
-Write-Host "Required variables (press Enter to skip optional ones):"
+Write-Host 'Required variables (press Enter to skip optional ones):'
 
 # --- Required ---
 Prompt-EnvVar -Key "TELEGRAM_TOKEN" -Description "Bot token from @BotFather on Telegram"
 Prompt-EnvVar -Key "ANTHROPIC_API_KEY" -Description "API key from https://console.anthropic.com/settings/keys"
-Prompt-EnvVar -Key "ALLOWED_CHAT_IDS" -Description "Comma-separated Telegram chat IDs (your chat ID)"
+Prompt-EnvVar -Key "ALLOWED_CHAT_IDS" -Description 'Comma-separated Telegram chat IDs - your chat ID'
 
 # --- Auto-generate secrets ---
 Write-Host ""
@@ -161,19 +161,19 @@ Generate-Secret -Key "SIRI_API_KEY"
 
 # --- Optional ---
 Write-Host ""
-Write-Host "Optional variables (press Enter to skip):"
-Prompt-EnvVar -Key "DOIT_GOOGLE_CLIENT_ID" -Description "Google OAuth Client ID (for calendar sync in DoIt)"
+Write-Host 'Optional variables (press Enter to skip):'
+Prompt-EnvVar -Key "DOIT_GOOGLE_CLIENT_ID" -Description 'Google OAuth Client ID - for calendar sync in DoIt'
 Prompt-EnvVar -Key "DOIT_GOOGLE_CLIENT_SECRET" -Description "Google OAuth Client Secret"
-Prompt-EnvVar -Key "MACRONOTION_NOTION_CLIENT_ID" -Description "Notion OAuth Client ID (from notion.so/my-integrations)"
+Prompt-EnvVar -Key "MACRONOTION_NOTION_CLIENT_ID" -Description 'Notion OAuth Client ID - from notion.so/my-integrations'
 Prompt-EnvVar -Key "MACRONOTION_NOTION_CLIENT_SECRET" -Description "Notion OAuth Client Secret"
-Prompt-EnvVar -Key "GOOGLE_ICAL_URLS" -Description "Google Calendar iCal URLs (pipe-separated)"
+Prompt-EnvVar -Key "GOOGLE_ICAL_URLS" -Description 'Google Calendar iCal URLs - pipe-separated'
 
 Write-Host ""
-Write-Host "Optional profiles (media, automation, budget):"
-Prompt-EnvVar -Key "STRAVA_CLIENT_ID" -Description "Strava API Client ID (profile: media)"
-Prompt-EnvVar -Key "STRAVA_CLIENT_SECRET" -Description "Strava API Client Secret (profile: media)"
-Prompt-EnvVar -Key "YOUR_SPOTIFY_PUBLIC" -Description "Spotify App Client ID (profile: media)"
-Prompt-EnvVar -Key "YOUR_SPOTIFY_SECRET" -Description "Spotify App Client Secret (profile: media)"
+Write-Host 'Optional profiles (media, automation, budget):'
+Prompt-EnvVar -Key "STRAVA_CLIENT_ID" -Description 'Strava API Client ID - profile: media'
+Prompt-EnvVar -Key "STRAVA_CLIENT_SECRET" -Description 'Strava API Client Secret - profile: media'
+Prompt-EnvVar -Key "YOUR_SPOTIFY_PUBLIC" -Description 'Spotify App Client ID - profile: media'
+Prompt-EnvVar -Key "YOUR_SPOTIFY_SECRET" -Description 'Spotify App Client Secret - profile: media'
 
 # --- Start the stack ---
 Write-Host ""
