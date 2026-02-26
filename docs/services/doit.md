@@ -31,7 +31,7 @@ A daily task management app with calendar integration. Built with Next.js (front
 3. Enable the Google Calendar API
 4. Create OAuth 2.0 credentials:
    - Application type: Web application
-   - Authorized redirect URI: `http://tasks.homelab/settings?google=callback`
+   - Authorized redirect URI: `http://localhost:3000/settings?google=callback`
 5. Copy Client ID and Client Secret to your `.env` file
 6. Restart: `docker compose restart doit-backend doit`
 
@@ -46,4 +46,4 @@ A daily task management app with calendar integration. Built with Next.js (front
 docker compose logs doit-backend
 ```
 
-**Google Calendar not syncing:** Verify the redirect URI matches exactly. Check that the Google Calendar API is enabled in your Google Cloud project.
+**Google Calendar not syncing:** Verify the redirect URI in Google Cloud Console matches exactly: `http://localhost:3000/settings?google=callback`. Check that the Google Calendar API is enabled in your Google Cloud project.

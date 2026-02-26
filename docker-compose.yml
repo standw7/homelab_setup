@@ -67,7 +67,7 @@ services:
       - FRONTEND_URL=http://tasks.homelab
       - GOOGLE_CLIENT_ID=${DOIT_GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${DOIT_GOOGLE_CLIENT_SECRET}
-      - GOOGLE_REDIRECT_URI=http://tasks.homelab/settings?google=callback
+      - GOOGLE_REDIRECT_URI=http://localhost:3000/settings?google=callback
       - INTERNAL_API_KEY=${DOIT_INTERNAL_API_KEY}
 
   # --- DoIt Frontend: Next.js ---
