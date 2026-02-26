@@ -1,7 +1,7 @@
 # Handoff — homelab_setup
 
-**Date:** 2026-02-25
-**Status:** Planning complete, ready for implementation
+**Date:** 2026-02-26
+**Status:** Implementation plan approved, ready for execution via parallel session
 
 ## What's Done
 
@@ -38,3 +38,23 @@ Execute the 13-task implementation plan using `superpowers:executing-plans`. The
 - All secrets via .env, zero hardcoded values
 - Support both Linux (bash) and Windows (PowerShell) setup
 - Documentation written for non-technical users WITHOUT Claude Code
+
+## Critical: PII to Sanitize from Source Homelab
+
+The source `~/homelab/docker-compose.yml` has hardcoded secrets:
+- Telegram token, Vikunja token, Beaver Habits email/password
+- Strava client secret and refresh token
+- Google Calendar iCal URLs
+- Tailscale IP `100.111.132.107`
+- Email `stanleywessman@gmail.com`
+- Huginn APP_SECRET_TOKEN (hardcoded hash)
+- Spotify token redirect in Caddyfile
+
+ALL of these must become `${ENV_VAR}` references in the new repo.
+
+## Execution Instructions
+
+Open a new Claude Code session in `~/homelab_setup` and run:
+```
+Use superpowers:executing-plans to execute docs/plans/2026-02-25-homelab-setup-implementation.md
+```
