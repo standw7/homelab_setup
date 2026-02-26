@@ -45,8 +45,8 @@ The source `~/homelab/docker-compose.yml` has hardcoded secrets:
 - Telegram token, Vikunja token, Beaver Habits email/password
 - Strava client secret and refresh token
 - Google Calendar iCal URLs
-- Tailscale IP `100.111.132.107`
-- Email `stanleywessman@gmail.com`
+- Tailscale IP (hardcoded)
+- Email address (hardcoded)
 - Huginn APP_SECRET_TOKEN (hardcoded hash)
 - Spotify token redirect in Caddyfile
 

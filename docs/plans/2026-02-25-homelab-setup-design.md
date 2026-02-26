@@ -121,10 +121,10 @@ Enabled with `docker compose --profile <name> up -d`:
 - Huginn DB passwords
 - Boostcamp sync API key, Siri API key
 - Google Calendar iCal URLs
-- Tailscale IP 100.111.132.107
-- Email address stanleywessman@gmail.com
-- Personal RSS feeds (Utah Hockey, etc.) → replace with generic feeds
-- Glance weather location (Salt Lake City) → placeholder
+- Tailscale IP (hardcoded)
+- Email address (hardcoded)
+- Personal RSS feeds → replace with generic feeds
+- Glance weather location → placeholder
 
 ### Pre-push audit
 Run `gitleaks` on the repository before first public push.

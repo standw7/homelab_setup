@@ -318,7 +318,7 @@ git commit -m "feat: add sanitized CoreDNS and Caddy configs"
 
 **Step 1: Create Glance config with generic content**
 
-Replace personal feeds (Utah Hockey, personal arXiv query) with generic tech feeds. Replace Salt Lake City weather with a placeholder.
+Replace personal feeds with generic tech feeds. Replace personal weather location with a placeholder.
 
 ```yaml
 server:
@@ -885,13 +885,13 @@ cd test-homelab
 **Step 2: Search for any remaining PII**
 
 ```bash
-grep -ri "stanleywessman" .
-grep -ri "stan@" .
-grep -ri "100.111.132.107" .
-grep -ri "8580388457" .  # telegram token prefix
-grep -ri "sk-ant-" .     # anthropic key prefix
-grep -ri "utah" .        # personal location references
-grep -ri "salt lake" .   # personal location references
+# Search for personal email, IPs, token prefixes, and location references
+# Expected: zero matches for all searches
+grep -ri "<personal-email>" .
+grep -ri "<tailscale-ip>" .
+grep -ri "<telegram-token-prefix>" .
+grep -ri "<api-key-prefix>" .
+grep -ri "<personal-location>" .
 ```
 
 Expected: zero matches for all searches.
