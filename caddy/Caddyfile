@@ -1,0 +1,89 @@
+# Global options
+{
+}
+
+# Glance — dashboard (landing page)
+http://home.homelab {
+	reverse_proxy glance:8080
+}
+
+# Glance — feed dashboard
+http://glance.homelab {
+	reverse_proxy glance:8080
+}
+
+# DoIt — task management
+http://tasks.homelab {
+	reverse_proxy doit:3000
+}
+
+# Vikunja — task management (used by Telegram bot)
+http://vikunja.homelab {
+	reverse_proxy vikunja:3456
+}
+
+# MacroNotion — meal planning
+http://meals.homelab {
+	reverse_proxy macronotion-frontend:3000
+}
+
+# SearXNG — private search engine
+http://search.homelab {
+	reverse_proxy searxng:8080
+}
+
+# n8n — workflow automation
+http://flows.homelab {
+	reverse_proxy n8n:5678
+}
+
+# Huginn — automation platform
+http://automate.homelab {
+	reverse_proxy huginn:3000
+}
+
+# Actual Budget — budgeting
+budget.homelab {
+	tls internal
+	reverse_proxy actual-budget:5006
+}
+
+# Portainer — Docker management
+http://docker.homelab {
+	reverse_proxy portainer:9000
+}
+
+# Strava Statistics — activity dashboard
+http://strava.homelab {
+	reverse_proxy strava:8080
+}
+
+# Fitness Dashboard — exercise & reading tracker
+http://fitness.homelab {
+	reverse_proxy fitness-dashboard:8080
+}
+
+# Beaver Habits — habit tracker
+http://habits.homelab {
+	reverse_proxy beaver-habits:8080
+}
+
+# Your Spotify — web client
+http://spotify.homelab {
+	reverse_proxy your-spotify-client:3000
+}
+
+# Your Spotify — API server
+http://spotify-api.homelab {
+	reverse_proxy your-spotify-server:8080
+}
+
+# Boostcamp Sync — workout sync API
+http://boostcamp-sync.homelab {
+	reverse_proxy boostcamp-sync:8087
+}
+
+# Siri API — Apple Shortcuts -> Telegram bot
+http://siri.homelab {
+	reverse_proxy telegram-bot:8088
+}
