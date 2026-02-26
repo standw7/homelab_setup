@@ -37,6 +37,12 @@ if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
 }
 Write-Host "Docker: $(docker --version)"
 
+# --- Tip: auto-start Docker Desktop on login ---
+Write-Host ""
+Write-Host "TIP: To start Docker automatically when you sign in:"
+Write-Host '  Open Docker Desktop > Settings > General > "Start Docker Desktop when you sign in"'
+Write-Host ""
+
 # --- Verify Docker engine is running ---
 $dockerInfo = docker info 2>&1
 if ($LASTEXITCODE -ne 0) {

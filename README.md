@@ -107,6 +107,32 @@ Now `http://home.homelab`, `http://tasks.homelab`, etc. will work from any Tails
 
 See [docs/tailscale.md](docs/tailscale.md) for detailed instructions.
 
+## Auto-Start on Boot
+
+The homelab stack starts automatically when your machine boots:
+
+**Linux**: The setup script runs `systemctl enable docker`, which starts Docker on boot. All containers use `restart: unless-stopped`, so they come up with Docker.
+
+**Windows**: Open Docker Desktop > Settings > General > "Start Docker Desktop when you sign in". Containers with `restart: unless-stopped` will start automatically once Docker Desktop is running.
+
+## Syncing Changes / Refresh
+
+When the homelab code or container images are updated (e.g., new features pushed to GitHub, new GHCR images built), pull everything down with the refresh script:
+
+```bash
+# Linux
+bash scripts/refresh.sh
+
+# Windows (PowerShell)
+powershell scripts/refresh.ps1
+```
+
+The refresh script:
+1. Pulls the latest code (`git pull`)
+2. Pulls the latest container images (`docker compose pull`)
+3. Auto-detects which profiles are currently running
+4. Restarts everything with `docker compose up -d`
+
 ## Configuration
 
 ### Environment Variables

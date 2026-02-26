@@ -57,6 +57,14 @@ if ! docker info &>/dev/null; then
     exit 1
 fi
 
+# --- Enable Docker to start on boot ---
+if command -v systemctl &>/dev/null; then
+    if ! systemctl is-enabled docker &>/dev/null; then
+        echo "Enabling Docker to start on boot..."
+        sudo systemctl enable docker
+    fi
+fi
+
 # --- Check/install Tailscale ---
 if ! command -v tailscale &>/dev/null; then
     echo ""
