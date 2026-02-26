@@ -1,4 +1,4 @@
-# homelab_setup — Windows bootstrap script
+﻿# homelab_setup -- Windows bootstrap script
 # Installs dependencies, configures environment, and starts the homelab stack.
 $ErrorActionPreference = "Stop"
 
@@ -8,7 +8,7 @@ $ProjectDir = Split-Path -Parent $ScriptDir
 Set-Location $ProjectDir
 
 Write-Host "============================================"
-Write-Host "  Homelab Setup — Windows Bootstrap"
+Write-Host "  Homelab Setup - Windows Bootstrap"
 Write-Host "============================================"
 Write-Host ""
 
