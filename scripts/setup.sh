@@ -162,7 +162,7 @@ prompt_env "MACRONOTION_NOTION_CLIENT_SECRET" "Notion OAuth Client Secret"
 prompt_env "GOOGLE_ICAL_URLS" "Google Calendar iCal URLs (pipe-separated)"
 
 echo ""
-echo "Optional profiles (media, automation, search, budget, tasks):"
+echo "Optional profiles (media, automation, budget):"
 prompt_env "STRAVA_CLIENT_ID" "Strava API Client ID (profile: media)"
 prompt_env "STRAVA_CLIENT_SECRET" "Strava API Client Secret (profile: media)"
 prompt_env "YOUR_SPOTIFY_PUBLIC" "Spotify App Client ID (profile: media)"
