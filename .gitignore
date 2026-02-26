@@ -11,11 +11,16 @@ __pycache__/
 beaver-habits/data/*.json
 beaver-habits/data/*.db
 beaver-habits/data/.nicegui/
-homarr/appdata/
-strava/build/
-strava/storage/
-vikunja/db/
-vikunja/files/
+homarr/appdata/*
+!homarr/appdata/.gitkeep
+strava/build/*
+!strava/build/.gitkeep
+strava/storage/*
+!strava/storage/**/.gitkeep
+vikunja/db/*
+!vikunja/db/.gitkeep
+vikunja/files/*
+!vikunja/files/.gitkeep
 
 # OS
 .DS_Store
