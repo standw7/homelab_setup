@@ -1,0 +1,18 @@
+general:
+  appUrl: http://strava.homelab
+  athlete.birthday: 1990-01-01
+  athlete.maxHeartRateFormula: fox
+
+appearance:
+  locale: en_US
+  unitSystem: imperial
+  timeFormat: 12
+
+import:
+  numberOfNewActivitiesToProcessPerImport: 250
+
+daemon:
+  cron:
+    - action: importDataAndBuildApp
+      expression: '0 */6 * * *'
+      enabled: true

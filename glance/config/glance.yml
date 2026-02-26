@@ -1,0 +1,82 @@
+server:
+  port: 8080
+
+theme:
+  background-color: 0 0 100
+  primary-color: 0 0 12
+  positive-color: 120 57 45
+  negative-color: 0 70 53
+  contrast-multiplier: 1.1
+  text-saturation-multiplier: 0.5
+  light: true
+
+branding:
+  custom-footer: "&nbsp; Self-Hosted Homelab"
+
+pages:
+  - name: Dashboard
+    columns:
+      - size: full
+        widgets:
+          - type: weather
+            # TODO: Change to your city
+            location: New York, New York, United States
+            units: imperial
+            hour-format: 12h
+
+          - type: bookmarks
+            title: Homelab
+            groups:
+              - title: Productivity
+                links:
+                  - title: Tasks
+                    url: http://tasks.homelab
+                  - title: Meals
+                    url: http://meals.homelab
+                  - title: Budget
+                    url: http://budget.homelab
+                  - title: Habit Tracker
+                    url: http://habits.homelab
+                  - title: Fitness Tracker
+                    url: http://fitness.homelab
+              - title: Automation
+                links:
+                  - title: Huginn
+                    url: http://automate.homelab
+                  - title: n8n
+                    url: http://flows.homelab
+
+      - size: small
+        widgets:
+          - type: hacker-news
+            title: Hacker News
+            limit: 15
+            collapse-after: 5
+
+          - type: rss
+            title: Tech News
+            feeds:
+              - url: https://feeds.arstechnica.com/arstechnica/index
+                title: Ars Technica
+              - url: https://www.theverge.com/rss/index.xml
+                title: The Verge
+            limit: 15
+            collapse-after: 5
+
+      - size: small
+        widgets:
+          - type: reddit
+            subreddit: selfhosted
+            title: r/selfhosted
+            limit: 10
+            collapse-after: 5
+
+          - type: rss
+            title: Linux & Open Source
+            feeds:
+              - url: https://www.phoronix.com/rss.php
+                title: Phoronix
+              - url: https://linuxhandbook.com/rss/
+                title: Linux Handbook
+            limit: 10
+            collapse-after: 5
