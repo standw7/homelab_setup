@@ -1,0 +1,5 @@
+[extend]
+useDefault = true
+
+[allowlist]
+commits = ["11d48009a14f5d3a98c95a7866f396ed4dbd9d0f"]
