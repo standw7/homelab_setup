@@ -1,0 +1,417 @@
+services:
+  # ==========================================================================
+  # INFRASTRUCTURE (no profile — always runs)
+  # ==========================================================================
+
+  # --- CoreDNS: Resolves *.homelab to Tailscale IP ---
+  coredns:
+    image: coredns/coredns:latest
+    container_name: coredns
+    restart: unless-stopped
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    volumes:
+      - ./coredns/Corefile:/etc/coredns/Corefile:ro
+    command: -conf /etc/coredns/Corefile
+
+  # --- Caddy: Reverse proxy (*.homelab domains) ---
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+  # --- Portainer: Docker management UI ---
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "9443:9443"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+  # ==========================================================================
+  # CORE APPS (no profile — always runs)
+  # ==========================================================================
+
+  # --- Glance: Feed dashboard ---
+  glance:
+    image: glanceapp/glance
+    container_name: glance
+    restart: unless-stopped
+    ports:
+      - "8085:8080"
+    volumes:
+      - ./glance/config:/app/config
+
+  # --- DoIt Backend: FastAPI + SQLite ---
+  doit-backend:
+    image: ghcr.io/standw7/doit-backend:latest
+    container_name: doit-backend
+    restart: unless-stopped
+    volumes:
+      - doit_db:/app/data
+    environment:
+      - DATABASE_URL=sqlite:////app/data/doit.db
+      - SECRET_KEY=${DOIT_SECRET_KEY}
+      - FRONTEND_URL=http://tasks.homelab
+      - GOOGLE_CLIENT_ID=${DOIT_GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${DOIT_GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=http://tasks.homelab/settings?google=callback
+      - INTERNAL_API_KEY=${DOIT_INTERNAL_API_KEY}
+
+  # --- DoIt Frontend: Next.js ---
+  doit:
+    image: ghcr.io/standw7/doit:latest
+    container_name: doit
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
+    environment:
+      - BACKEND_URL=http://doit-backend:8000
+    depends_on:
+      - doit-backend
+
+  # --- MacroNotion Backend: FastAPI + SQLite ---
+  macronotion-backend:
+    image: ghcr.io/standw7/macronotion-backend:latest
+    container_name: macronotion-backend
+    restart: unless-stopped
+    volumes:
+      - macronotion_db:/app/data
+    environment:
+      - DATABASE_URL=sqlite:////app/data/macronotion.db
+      - NOTION_CLIENT_ID=${MACRONOTION_NOTION_CLIENT_ID}
+      - NOTION_CLIENT_SECRET=${MACRONOTION_NOTION_CLIENT_SECRET}
+      - SECRET_KEY=${MACRONOTION_SECRET_KEY}
+      - FRONTEND_URL=http://meals.homelab
+      - NOTION_REDIRECT_URI=http://meals.homelab/auth/notion/callback
+
+  # --- MacroNotion Frontend: Next.js ---
+  macronotion-frontend:
+    image: ghcr.io/standw7/macronotion-frontend:latest
+    container_name: macronotion-frontend
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - BACKEND_URL=http://macronotion-backend:8000
+    depends_on:
+      - macronotion-backend
+
+  # --- Telegram Bot: Personal assistant (chat via polling) ---
+  telegram-bot:
+    image: ghcr.io/standw7/telegram-bot:latest
+    container_name: telegram-bot
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    volumes:
+      - telegram_bot_data:/data
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - CLAUDE_MODEL=${CLAUDE_MODEL:-claude-haiku-4-5-20251001}
+      - ALLOWED_CHAT_IDS=${ALLOWED_CHAT_IDS}
+      - SEARXNG_URL=${SEARXNG_URL:-http://searxng:8080}
+      - VIKUNJA_URL=${VIKUNJA_URL:-http://vikunja:3456}
+      - VIKUNJA_TOKEN=${VIKUNJA_TOKEN}
+      - DOIT_URL=${DOIT_URL:-http://doit-backend:8000}
+      - DOIT_API_KEY=${DOIT_INTERNAL_API_KEY}
+      - BEAVER_HABITS_URL=${BEAVER_HABITS_URL:-http://beaver-habits:8080}
+      - BEAVER_HABITS_EMAIL=${BEAVER_HABITS_EMAIL}
+      - BEAVER_HABITS_PASSWORD=${BEAVER_HABITS_PASSWORD}
+      - STRAVA_CLIENT_ID=${STRAVA_CLIENT_ID}
+      - STRAVA_CLIENT_SECRET=${STRAVA_CLIENT_SECRET}
+      - STRAVA_REFRESH_TOKEN=${STRAVA_REFRESH_TOKEN}
+      - BOOSTCAMP_SYNC_URL=${BOOSTCAMP_SYNC_URL:-http://boostcamp-sync:8087}
+      - BOOSTCAMP_SYNC_API_KEY=${BOOSTCAMP_SYNC_API_KEY}
+      - SIRI_API_KEY=${SIRI_API_KEY}
+      - GOOGLE_CLIENT_ID=${DOIT_GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${DOIT_GOOGLE_CLIENT_SECRET}
+      - GOOGLE_ICAL_URLS=${GOOGLE_ICAL_URLS}
+      - TZ=${TZ:-America/Denver}
+    depends_on:
+      - doit-backend
+      - beaver-habits
+
+  # --- Beaver Habits: Habit tracker ---
+  beaver-habits:
+    image: daya0576/beaverhabits:latest
+    container_name: beaver-habits
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    volumes:
+      - ./beaver-habits/data:/app/.user/
+    environment:
+      - HABITS_STORAGE=USER_DISK
+      - TZ=${TZ:-America/Denver}
+    user: "0:0"
+
+  # --- Fitness Dashboard: Exercise & reading tracker ---
+  fitness-dashboard:
+    image: ghcr.io/standw7/fitness-dashboard:latest
+    container_name: fitness-dashboard
+    restart: unless-stopped
+    volumes:
+      - telegram_bot_data:/data
+    environment:
+      - TZ=${TZ:-America/Denver}
+
+  # ==========================================================================
+  # OPTIONAL — media profile
+  # ==========================================================================
+
+  # --- Strava Statistics: Activity dashboard ---
+  strava:
+    image: robiningelbrecht/statistics-for-strava:latest
+    container_name: strava
+    restart: unless-stopped
+    profiles:
+      - media
+    volumes:
+      - ./strava/.env:/var/www/.env
+      - ./strava/config:/var/www/config/app
+      - ./strava/build:/var/www/build
+      - ./strava/storage/database:/var/www/storage/database
+      - ./strava/storage/files:/var/www/storage/files
+      - ./strava/storage/gear-maintenance:/var/www/storage/gear-maintenance
+    environment:
+      - TZ=${TZ:-America/Denver}
+    ports:
+      - "8081:8080"
+
+  # --- Strava Daemon: Background cron for data import ---
+  strava-daemon:
+    image: robiningelbrecht/statistics-for-strava:latest
+    container_name: strava-daemon
+    restart: unless-stopped
+    profiles:
+      - media
+    volumes:
+      - ./strava/.env:/var/www/.env
+      - ./strava/config:/var/www/config/app
+      - ./strava/build:/var/www/build
+      - ./strava/storage/database:/var/www/storage/database
+      - ./strava/storage/files:/var/www/storage/files
+      - ./strava/storage/gear-maintenance:/var/www/storage/gear-maintenance
+    environment:
+      - TZ=${TZ:-America/Denver}
+    entrypoint: ['bin/console', 'app:daemon:run']
+    depends_on:
+      - strava
+
+  # --- Boostcamp Sync: Sends Boostcamp workouts to Strava ---
+  boostcamp-sync:
+    image: ghcr.io/standw7/boostcamp-sync:latest
+    container_name: boostcamp-sync
+    restart: unless-stopped
+    profiles:
+      - media
+    ports:
+      - "8087:8087"
+    volumes:
+      - boostcamp_sync_data:/data
+    environment:
+      - STRAVA_CLIENT_ID=${STRAVA_CLIENT_ID}
+      - STRAVA_CLIENT_SECRET=${STRAVA_CLIENT_SECRET}
+      - STRAVA_REFRESH_TOKEN=${STRAVA_REFRESH_TOKEN}
+      - API_KEY=${BOOSTCAMP_SYNC_API_KEY}
+      - TZ=${TZ:-America/Denver}
+
+  # --- Your Spotify: MongoDB ---
+  your-spotify-mongo:
+    image: mongo:6
+    container_name: your-spotify-mongo
+    restart: unless-stopped
+    profiles:
+      - media
+    volumes:
+      - your_spotify_db:/data/db
+
+  # --- Your Spotify: API server ---
+  your-spotify-server:
+    image: yooooomi/your_spotify_server
+    container_name: your-spotify-server
+    restart: unless-stopped
+    profiles:
+      - media
+    ports:
+      - "8084:8080"
+    environment:
+      - API_ENDPOINT=http://spotify-api.homelab
+      - CLIENT_ENDPOINT=http://spotify.homelab
+      - CORS=http://spotify.homelab,http://127.0.0.1:3006
+      - COOKIE_VALIDITY_MS=31536000000
+      - SPOTIFY_PUBLIC=${YOUR_SPOTIFY_PUBLIC}
+      - SPOTIFY_SECRET=${YOUR_SPOTIFY_SECRET}
+      - TIMEZONE=${TZ:-America/Denver}
+      - MONGO_ENDPOINT=mongodb://your-spotify-mongo:27017/your_spotify
+    depends_on:
+      - your-spotify-mongo
+
+  # --- Your Spotify: Web client ---
+  your-spotify-client:
+    image: yooooomi/your_spotify_client
+    container_name: your-spotify-client
+    restart: unless-stopped
+    profiles:
+      - media
+    ports:
+      - "3006:3000"
+    environment:
+      - API_ENDPOINT=http://spotify-api.homelab
+    depends_on:
+      - your-spotify-server
+
+  # ==========================================================================
+  # OPTIONAL — automation profile
+  # ==========================================================================
+
+  # --- Huginn DB: MySQL for Huginn ---
+  huginn-db:
+    image: mysql:8.0
+    container_name: huginn-db
+    restart: unless-stopped
+    profiles:
+      - automation
+    volumes:
+      - huginn_db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${HUGINN_DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=huginn
+      - MYSQL_USER=huginn
+      - MYSQL_PASSWORD=${HUGINN_DB_PASSWORD}
+
+  # --- Huginn: Self-hosted automation (like IFTTT/Zapier) ---
+  huginn:
+    image: ghcr.io/huginn/huginn
+    container_name: huginn
+    restart: unless-stopped
+    profiles:
+      - automation
+    ports:
+      - "3005:3000"
+    environment:
+      - ENABLE_INSECURE_AGENTS=true
+      - DOMAIN=automate.homelab
+      - PORT=3000
+      - APP_SECRET_TOKEN=${HUGINN_APP_SECRET_TOKEN}
+      - DATABASE_ADAPTER=mysql2
+      - DATABASE_ENCODING=utf8mb4
+      - DATABASE_HOST=huginn-db
+      - DATABASE_PORT=3306
+      - DATABASE_NAME=huginn
+      - DATABASE_USERNAME=huginn
+      - DATABASE_PASSWORD=${HUGINN_DB_PASSWORD}
+      - TIMEZONE=Mountain Time (US & Canada)
+      - FORCE_SSL=false
+      - SKIP_INVITATION_CODE=true
+      - IMPORT_DEFAULT_SCENARIO_FOR_ALL_USERS=true
+    depends_on:
+      - huginn-db
+
+  # --- n8n: Workflow automation (scheduled tasks) ---
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    profiles:
+      - automation
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_AI_ENABLED=true
+      - GENERIC_TIMEZONE=${TZ:-America/Denver}
+      - TZ=${TZ:-America/Denver}
+
+  # ==========================================================================
+  # OPTIONAL — search profile
+  # ==========================================================================
+
+  # --- SearXNG: Private self-hosted search engine ---
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    profiles:
+      - search
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./searxng:/etc/searxng
+    environment:
+      - SEARXNG_BASE_URL=http://search.homelab/
+
+  # ==========================================================================
+  # OPTIONAL — budget profile
+  # ==========================================================================
+
+  # --- Actual Budget: Envelope-style budgeting ---
+  actual-budget:
+    image: actualbudget/actual-server:latest
+    container_name: actual-budget
+    restart: unless-stopped
+    profiles:
+      - budget
+    ports:
+      - "5006:5006"
+    volumes:
+      - actual_data:/data
+
+  # ==========================================================================
+  # OPTIONAL — tasks profile
+  # ==========================================================================
+
+  # --- Vikunja: Task management ---
+  vikunja:
+    image: vikunja/vikunja:latest
+    container_name: vikunja
+    restart: unless-stopped
+    profiles:
+      - tasks
+    ports:
+      - "3456:3456"
+    volumes:
+      - ./vikunja/files:/app/vikunja/files
+      - ./vikunja/db:/app/vikunja/db
+    environment:
+      - VIKUNJA_SERVICE_PUBLICURL=http://vikunja.homelab
+      - VIKUNJA_SERVICE_JWTSECRET=change-me-to-a-random-string
+      - VIKUNJA_SERVICE_ENABLEREGISTRATION=true
+      - VIKUNJA_DATABASE_TYPE=sqlite
+      - VIKUNJA_DATABASE_PATH=/app/vikunja/db/vikunja.db
+      - TZ=${TZ:-America/Denver}
+
+# ==========================================================================
+# VOLUMES
+# ==========================================================================
+volumes:
+  caddy_data:
+  caddy_config:
+  portainer_data:
+  doit_db:
+  macronotion_db:
+  telegram_bot_data:
+  n8n_data:
+  huginn_db:
+  actual_data:
+  your_spotify_db:
+  boostcamp_sync_data:
