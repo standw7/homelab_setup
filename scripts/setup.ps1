@@ -37,6 +37,16 @@ if (-not (Get-Command docker -ErrorAction SilentlyContinue)) {
 }
 Write-Host "Docker: $(docker --version)"
 
+# --- Verify Docker engine is running ---
+$dockerInfo = docker info 2>&1
+if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "ERROR: Docker Engine is not running."
+    Write-Host "Please start Docker Desktop and wait for it to fully initialize,"
+    Write-Host "then re-run this script."
+    exit 1
+}
+
 # --- Check/install Tailscale ---
 if (-not (Get-Command tailscale -ErrorAction SilentlyContinue)) {
     Write-Host ""
@@ -197,6 +207,13 @@ if ($envVars["HUGINN_APP_SECRET_TOKEN"]) {
 
 Write-Host "Starting core services..."
 & docker compose @profiles up -d
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
+    Write-Host "ERROR: docker compose failed (exit code $LASTEXITCODE)."
+    Write-Host "Check the output above for details."
+    exit 1
+}
 
 Write-Host ""
 Write-Host "============================================"

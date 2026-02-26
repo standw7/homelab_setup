@@ -50,6 +50,13 @@ if ! docker compose version &>/dev/null; then
     exit 1
 fi
 
+if ! docker info &>/dev/null; then
+    echo ""
+    echo "ERROR: Docker Engine is not running."
+    echo "Start Docker with: sudo systemctl start docker"
+    exit 1
+fi
+
 # --- Check/install Tailscale ---
 if ! command -v tailscale &>/dev/null; then
     echo ""
