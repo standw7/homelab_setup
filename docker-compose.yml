@@ -123,7 +123,6 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - CLAUDE_MODEL=${CLAUDE_MODEL:-claude-haiku-4-5-20251001}
       - ALLOWED_CHAT_IDS=${ALLOWED_CHAT_IDS}
-      - SEARXNG_URL=${SEARXNG_URL:-http://searxng:8080}
       - DOIT_URL=${DOIT_URL:-http://doit-backend:8000}
       - DOIT_API_KEY=${DOIT_INTERNAL_API_KEY}
       - BEAVER_HABITS_URL=${BEAVER_HABITS_URL:-http://beaver-habits:8080}
@@ -339,24 +338,6 @@ services:
       - N8N_AI_ENABLED=true
       - GENERIC_TIMEZONE=${TZ:-America/Denver}
       - TZ=${TZ:-America/Denver}
-
-  # ==========================================================================
-  # OPTIONAL — search profile
-  # ==========================================================================
-
-  # --- SearXNG: Private self-hosted search engine ---
-  searxng:
-    image: searxng/searxng:latest
-    container_name: searxng
-    restart: unless-stopped
-    profiles:
-      - search
-    ports:
-      - "8888:8080"
-    volumes:
-      - ./searxng:/etc/searxng
-    environment:
-      - SEARXNG_BASE_URL=http://search.homelab/
 
   # ==========================================================================
   # OPTIONAL — budget profile

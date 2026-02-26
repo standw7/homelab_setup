@@ -185,9 +185,6 @@ fi
 if [ -n "${HUGINN_APP_SECRET_TOKEN:-}" ]; then
     PROFILES="$PROFILES --profile automation"
 fi
-if [ -n "${SEARXNG_SECRET_KEY:-}" ]; then
-    PROFILES="$PROFILES --profile search"
-fi
 
 echo "Starting core services..."
 # shellcheck disable=SC2086

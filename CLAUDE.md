@@ -54,7 +54,6 @@ Enable with `docker compose --profile <name> up -d`:
 |---------|----------|
 | `media` | Strava Statistics, Your Spotify, Boostcamp Sync |
 | `automation` | Huginn, n8n |
-| `search` | SearXNG |
 | `budget` | Actual Budget |
 
 ## Project Structure
@@ -66,7 +65,6 @@ homelab_setup/
 ├── caddy/Caddyfile           # Reverse proxy routes
 ├── coredns/Corefile          # DNS config
 ├── glance/config/glance.yml  # Dashboard config
-├── searxng/                  # Search engine config
 ├── strava/config/            # Strava dashboard config
 ├── scripts/                  # Setup scripts (bash + powershell)
 │   ├── setup.sh / setup.ps1

@@ -84,14 +84,13 @@ docker compose --profile media up -d
 docker compose --profile media --profile automation up -d
 
 # Enable everything
-docker compose --profile media --profile automation --profile search --profile budget up -d
+docker compose --profile media --profile automation --profile budget up -d
 ```
 
 | Profile | Services | Description |
 |---------|----------|-------------|
 | `media` | Strava Statistics, Your Spotify, Boostcamp Sync | Activity & music tracking |
 | `automation` | Huginn, n8n | Workflow automation |
-| `search` | SearXNG | Private search engine |
 | `budget` | Actual Budget | Envelope-style budgeting |
 
 ## Tailscale DNS Setup
@@ -131,7 +130,6 @@ See [.env.example](.env.example) for all available variables with descriptions.
 | `glance/config/glance.yml` | Dashboard layout, feeds, weather location |
 | `caddy/Caddyfile` | Reverse proxy routes |
 | `coredns/Corefile` | DNS resolution |
-| `searxng/settings.yml` | Search engine settings |
 | `strava/config/config.yaml` | Strava dashboard settings |
 
 ### Adding a New Service

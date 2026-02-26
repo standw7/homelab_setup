@@ -22,11 +22,6 @@ http://meals.homelab {
 	reverse_proxy macronotion-frontend:3000
 }
 
-# SearXNG — private search engine
-http://search.homelab {
-	reverse_proxy searxng:8080
-}
-
 # n8n — workflow automation
 http://flows.homelab {
 	reverse_proxy n8n:5678

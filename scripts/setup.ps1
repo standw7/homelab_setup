@@ -167,7 +167,7 @@ Prompt-EnvVar -Key "MACRONOTION_NOTION_CLIENT_SECRET" -Description "Notion OAuth
 Prompt-EnvVar -Key "GOOGLE_ICAL_URLS" -Description "Google Calendar iCal URLs (pipe-separated)"
 
 Write-Host ""
-Write-Host "Optional profiles (media, automation, search, budget, tasks):"
+Write-Host "Optional profiles (media, automation, budget):"
 Prompt-EnvVar -Key "STRAVA_CLIENT_ID" -Description "Strava API Client ID (profile: media)"
 Prompt-EnvVar -Key "STRAVA_CLIENT_SECRET" -Description "Strava API Client Secret (profile: media)"
 Prompt-EnvVar -Key "YOUR_SPOTIFY_PUBLIC" -Description "Spotify App Client ID (profile: media)"
@@ -191,10 +191,6 @@ if ($envVars["STRAVA_CLIENT_ID"] -or $envVars["YOUR_SPOTIFY_PUBLIC"]) {
 if ($envVars["HUGINN_APP_SECRET_TOKEN"]) {
     $profiles += "--profile"
     $profiles += "automation"
-}
-if ($envVars["SEARXNG_SECRET_KEY"]) {
-    $profiles += "--profile"
-    $profiles += "search"
 }
 
 Write-Host "Starting core services..."

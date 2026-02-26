@@ -47,7 +47,6 @@ A personal AI assistant Telegram bot powered by Claude. Supports web search, tas
 
 | Command | Description |
 |---------|-------------|
-| `/search <query>` | Web search via SearXNG |
 | `/url <link>` | Fetch and summarize a webpage |
 | `/weather` | Current weather |
 | `/location <city>` | Set your location |
@@ -88,4 +87,3 @@ Content-Type: application/json
 docker compose logs telegram-bot
 ```
 
-**Search not working:** SearXNG must be running (enable the `search` profile).
