@@ -1,0 +1,22 @@
+# Environment (contains secrets)
+.env
+
+# Runtime data
+*.log
+*.db
+*.sqlite
+__pycache__/
+
+# Service data directories (populated at runtime)
+beaver-habits/data/*.json
+beaver-habits/data/*.db
+beaver-habits/data/.nicegui/
+homarr/appdata/
+strava/build/
+strava/storage/
+vikunja/db/
+vikunja/files/
+
+# OS
+.DS_Store
+Thumbs.db
