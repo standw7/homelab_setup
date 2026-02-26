@@ -22,7 +22,6 @@ A personal AI assistant Telegram bot powered by Claude. Supports web search, tas
 
 | Variable | Description |
 |----------|-------------|
-| `VIKUNJA_TOKEN` | Vikunja API token (for `/task` commands) |
 | `BEAVER_HABITS_EMAIL` | Beaver Habits login email |
 | `BEAVER_HABITS_PASSWORD` | Beaver Habits login password |
 | `GOOGLE_ICAL_URLS` | Pipe-separated Google Calendar iCal URLs |
@@ -53,7 +52,7 @@ A personal AI assistant Telegram bot powered by Claude. Supports web search, tas
 | `/weather` | Current weather |
 | `/location <city>` | Set your location |
 | `/news` | Top Hacker News stories |
-| `/task <title>` | Create a task in Vikunja |
+| `/task <title>` | Create a task in DoIt |
 | `/tasks` | List incomplete tasks |
 | `/done <#>` | Complete a task |
 | `/calendar` | Today's calendar events |

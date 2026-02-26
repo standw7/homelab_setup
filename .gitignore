@@ -17,10 +17,6 @@ strava/build/*
 !strava/build/.gitkeep
 strava/storage/*
 !strava/storage/**/.gitkeep
-vikunja/db/*
-!vikunja/db/.gitkeep
-vikunja/files/*
-!vikunja/files/.gitkeep
 
 # OS
 .DS_Store

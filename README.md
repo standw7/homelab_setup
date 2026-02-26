@@ -84,7 +84,7 @@ docker compose --profile media up -d
 docker compose --profile media --profile automation up -d
 
 # Enable everything
-docker compose --profile media --profile automation --profile search --profile budget --profile tasks up -d
+docker compose --profile media --profile automation --profile search --profile budget up -d
 ```
 
 | Profile | Services | Description |
@@ -93,7 +93,6 @@ docker compose --profile media --profile automation --profile search --profile b
 | `automation` | Huginn, n8n | Workflow automation |
 | `search` | SearXNG | Private search engine |
 | `budget` | Actual Budget | Envelope-style budgeting |
-| `tasks` | Vikunja | Alternative task management |
 
 ## Tailscale DNS Setup
 

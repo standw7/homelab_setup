@@ -56,7 +56,6 @@ Enable with `docker compose --profile <name> up -d`:
 | `automation` | Huginn, n8n |
 | `search` | SearXNG |
 | `budget` | Actual Budget |
-| `tasks` | Vikunja |
 
 ## Project Structure
 

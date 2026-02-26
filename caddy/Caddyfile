@@ -17,11 +17,6 @@ http://tasks.homelab {
 	reverse_proxy doit:3000
 }
 
-# Vikunja — task management (used by Telegram bot)
-http://vikunja.homelab {
-	reverse_proxy vikunja:3456
-}
-
 # MacroNotion — meal planning
 http://meals.homelab {
 	reverse_proxy macronotion-frontend:3000

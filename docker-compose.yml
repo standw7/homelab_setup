@@ -124,8 +124,6 @@ services:
       - CLAUDE_MODEL=${CLAUDE_MODEL:-claude-haiku-4-5-20251001}
       - ALLOWED_CHAT_IDS=${ALLOWED_CHAT_IDS}
       - SEARXNG_URL=${SEARXNG_URL:-http://searxng:8080}
-      - VIKUNJA_URL=${VIKUNJA_URL:-http://vikunja:3456}
-      - VIKUNJA_TOKEN=${VIKUNJA_TOKEN}
       - DOIT_URL=${DOIT_URL:-http://doit-backend:8000}
       - DOIT_API_KEY=${DOIT_INTERNAL_API_KEY}
       - BEAVER_HABITS_URL=${BEAVER_HABITS_URL:-http://beaver-habits:8080}
@@ -375,30 +373,6 @@ services:
       - "5006:5006"
     volumes:
       - actual_data:/data
-
-  # ==========================================================================
-  # OPTIONAL — tasks profile
-  # ==========================================================================
-
-  # --- Vikunja: Task management ---
-  vikunja:
-    image: vikunja/vikunja:latest
-    container_name: vikunja
-    restart: unless-stopped
-    profiles:
-      - tasks
-    ports:
-      - "3456:3456"
-    volumes:
-      - ./vikunja/files:/app/vikunja/files
-      - ./vikunja/db:/app/vikunja/db
-    environment:
-      - VIKUNJA_SERVICE_PUBLICURL=http://vikunja.homelab
-      - VIKUNJA_SERVICE_JWTSECRET=change-me-to-a-random-string
-      - VIKUNJA_SERVICE_ENABLEREGISTRATION=true
-      - VIKUNJA_DATABASE_TYPE=sqlite
-      - VIKUNJA_DATABASE_PATH=/app/vikunja/db/vikunja.db
-      - TZ=${TZ:-America/Denver}
 
 # ==========================================================================
 # VOLUMES
