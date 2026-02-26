@@ -115,9 +115,11 @@ function Generate-Secret {
         Write-Host "  $Key is already set (keeping existing value)"
         return
     }
+    $rng = [System.Security.Cryptography.RNGCryptoServiceProvider]::new()
     $bytes = New-Object byte[] 32
-    [System.Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
-    $secret = [BitConverter]::ToString($bytes) -replace '-', '' | ForEach-Object { $_.ToLower() }
+    $rng.GetBytes($bytes)
+    $rng.Dispose()
+    $secret = ([BitConverter]::ToString($bytes) -replace '-', '').ToLower()
     Set-EnvVar -Key $Key -Value $secret
     Write-Host "  ${Key}: auto-generated"
 }
